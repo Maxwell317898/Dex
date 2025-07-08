@@ -12,10 +12,23 @@ That one of there scrips is being moved etc, to enable this feature, change the 
 and set the webhookURL variable to the URL of your webhook.
 ]]
 
+if game.ReplicatedStorage.SReports == nil then -- if absent create it
+	local srfolder = Instance.new("Folder")
+	srfolder.Name = "SReports"
+	srfolder.Parent = game.ReplicatedStorage
+end
+
+if game.ReplicatedStorage.SReports.Report == nil then -- if absent create it
+	local report = Instance.new("RemoteEvent")
+	report.Name = "Report"
+	report.Parent = game.ReplicatedStorage.SReports
+end
+
 local ScriptReport = game.ReplicatedStorage.SReports.Report
 local UseWebhook = false -- change to true if you want to use webhooks
 local webhookURL = "" -- if you are using webhooks
 local HttpService = game:GetService("HttpService")
+
 
 ScriptReport.OnServerEvent:Connect(function(plr, ItemName, ItemClassName)
 	
