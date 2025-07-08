@@ -1,0 +1,32 @@
+--[[
+DeX, Denying Exploiters
+Created by: Maxwell317898 (github acct)
+licensed under the MIT License
+
+This script should be used in coordination with other DeX solutions.
+While this system is very good at stoping common exploits, it may not pick up on all exploits.
+]]
+
+local player = game.Players.LocalPlayer
+local playerscripts = script.Parent
+
+playerscripts.ChildAdded:Connect(function(Item)
+	
+	if Item.ClassName == "LocalScript" then -- check if Item is a LocalScript
+		
+		Item.Disabled = true -- disable the possiable threat
+		Item.Parent = playerscripts.exploitatempts -- Move to Exploit attempts folder
+		
+	else
+		
+		--TODO: 1. make a report to server handeler
+		warn("UNKNOWN item in player ".. player.Name.. "'s playerscripts. ITEM NAME: ".. Item.Name.. " ITEM TYPE".. Item.ClassName) -- DEBUG
+		warn("Moving item to replicated storage.")
+		
+		Item.Parent = game.ReplicatedStorage.SReports -- move to SReports folder 
+		
+		game.ReplicatedStorage.SReports.Report:FireServer(Item) -- fire server side investigation
+		
+	end
+	
+end)
