@@ -15,17 +15,19 @@ playerscripts.ChildAdded:Connect(function(Item)
 	if Item.ClassName == "LocalScript" then -- check if Item is a LocalScript
 		
 		Item.Disabled = true -- disable the possiable threat
+		
 		Item.Parent = playerscripts.exploitatempts -- Move to Exploit attempts folder
+		
+		warn("Attempted injection! ITEM NAME: ".. Item.Name.. " ITEM TYPE: LocalScript") -- DEBUG
 		
 	else
 		
 		--TODO: 1. make a report to server handeler
-		warn("UNKNOWN item in player ".. player.Name.. "'s playerscripts. ITEM NAME: ".. Item.Name.. " ITEM TYPE".. Item.ClassName) -- DEBUG
-		warn("Moving item to replicated storage.")
+		warn("UNKNOWN item in player ".. player.Name.. "'s playerscripts. ITEM NAME: ".. Item.Name.. " ITEM TYPE: ".. Item.ClassName) -- DEBUG
+		warn("Moving item details to server.")
 		
-		Item.Parent = game.ReplicatedStorage.SReports -- move to SReports folder 
-		
-		game.ReplicatedStorage.SReports.Report:FireServer(Item) -- fire server side investigation
+		game.ReplicatedStorage.SReports.Report:FireServer(Item.Name, Item.ClassName) -- fire server side investigation 
+		Item:Destroy()
 		
 	end
 	
