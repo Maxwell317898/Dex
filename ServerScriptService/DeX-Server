@@ -1,0 +1,52 @@
+--[[
+DeX,
+Denying Exploiters
+Created by: Maxwell317898 (github acct)
+licensed under the MIT License
+
+This script should be used in coordination with other DeX solutions.
+While this system is very good at stoping common exploits, it may not pick up on all exploits.
+
+This script can send reports from clients to a webhook to be aknowledged by a game developer.
+That one of there scrips is being moved etc, to enable this feature, change the UseWebhook variable to true
+and set the webhookURL variable to the URL of your webhook.
+]]
+
+local ScriptReport = game.ReplicatedStorage.SReports.Report
+local UseWebhook = false -- change to true if you want to use webhooks
+local webhookURL = "" -- if you are using webhooks
+local HttpService = game:GetService("HttpService")
+
+ScriptReport.OnServerEvent:Connect(function(plr, ItemName, ItemClassName)
+	
+	warn(plr.Name.. " Submited report about ITEM NAME: ".. ItemName.. " ITEM TYPE: ".. ItemClassName) -- state report
+	
+	if ItemClassName == "Script" or("ModuleScript") then -- if item is able to execute code
+		
+		if UseWebhook == true then -- send details to webhook if active
+			
+			local data = {
+				content = "script name: ".. ItemName.. " script type: ".. ItemClassName
+			}
+			
+			local success, response = pcall(function() -- send the data to the webhook in a Pcall
+				return HttpService:PostAsync(
+					webhookURL,
+					HttpService:JSONEncode(data),
+					Enum.HttpContentType.ApplicationJson
+				)
+			end)
+			
+			if success then
+				print("Webhook sent successfully.")
+			else
+				warn("Failed to send webhook: " .. tostring(response))
+			end
+			
+		end
+		
+		
+	else -- if reported for no reason
+		warn("ITEM NAME: ".. ItemName.. " ITEM TYPE: ".. ItemClassName.. " WAS REPORTED! AND NOT ACTIONED.")
+	end
+end)
