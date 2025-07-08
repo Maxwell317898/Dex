@@ -10,6 +10,13 @@ While this system is very good at stoping common exploits, it may not pick up on
 local player = game.Players.LocalPlayer
 local playerscripts = script.Parent
 
+if playerscripts.exploitatempts == nil then -- if exploit attempts folder does not exist, create it
+	local exploitatempts = Instance.new("Folder")
+	exploitatempts.Name = "exploitatempts"
+	exploitatempts.Parent = playerscripts
+end
+
+
 playerscripts.ChildAdded:Connect(function(Item)
 	
 	if Item.ClassName == "LocalScript" then -- check if Item is a LocalScript
