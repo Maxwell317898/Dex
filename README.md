@@ -1,4 +1,7 @@
 # DeX
+>[!CAUTION]
+>DeX has been tested and should NOT BE USED currently, as most exploits are not acted upon. </br>
+>I am Working on a patch, expect this to be made by the 25th.
 
 Deactivating eXploiters </br> </br>
 Server side & Client side anti script execution
