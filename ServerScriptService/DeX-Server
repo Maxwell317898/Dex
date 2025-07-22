@@ -6,60 +6,78 @@ licensed under the MIT License
 
 This script should be used in coordination with other DeX solutions.
 While this system is very good at stoping common exploits, it may not pick up on all exploits.
-
-This script can send reports from clients to a webhook to be aknowledged by a game developer.
-That one of there scrips is being moved etc, to enable this feature, change the UseWebhook variable to true
-and set the webhookURL variable to the URL of your webhook.
 ]]
 
-if game.ReplicatedStorage.SReports == nil then -- if absent create it
-	local srfolder = Instance.new("Folder")
-	srfolder.Name = "SReports"
-	srfolder.Parent = game.ReplicatedStorage
+-- Place this in ServerScriptService
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+-- List of usernames or UserIds who are exempt from detection
+local exemptUsers = {
+    ["Player1"] = true,
+    ["Player2"] = true,
+    [123456789] = true  -- UserId can also be used
+}
+
+-- Configuration
+local MAX_WALK_SPEED = 32       -- Normal max WalkSpeed is 16, 32 is generous
+local MAX_TELEPORT_DISTANCE = 50 -- Distance a player can move in one frame before it's suspicious
+
+local playerData = {}
+
+-- Utility function to check exemption
+local function isExempt(player)
+    return exemptUsers[player.Name] or exemptUsers[player.UserId]
 end
 
-if game.ReplicatedStorage.SReports.Report == nil then -- if absent create it
-	local report = Instance.new("RemoteEvent")
-	report.Name = "Report"
-	report.Parent = game.ReplicatedStorage.SReports
+-- Function to monitor player movement
+local function monitorPlayer(player)
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:WaitForChild("HumanoidRootPart", 5)
+    local humanoid = character:WaitForChild("Humanoid", 5)
+
+    if not humanoidRootPart or not humanoid then return end
+
+    playerData[player] = {
+        lastPosition = humanoidRootPart.Position,
+        lastCheck = tick()
+    }
+
+    RunService.Heartbeat:Connect(function()
+        if not player.Parent or not character.Parent then return end
+        if isExempt(player) then return end
+
+        local currentPos = humanoidRootPart.Position
+        local lastPos = playerData[player].lastPosition
+        local dt = tick() - playerData[player].lastCheck
+
+        -- Update last data
+        playerData[player].lastPosition = currentPos
+        playerData[player].lastCheck = tick()
+
+        local distance = (currentPos - lastPos).Magnitude
+
+        -- Check for suspicious teleport
+        if distance / dt > MAX_WALK_SPEED * 2 then
+            warn(player.Name .. " was kicked for suspected teleporting/flying (distance=" .. distance .. ")")
+            player:Kick("Flying or teleporting detected.")
+        elseif humanoid.WalkSpeed > MAX_WALK_SPEED then
+            warn(player.Name .. " was kicked for moving too fast (WalkSpeed=" .. humanoid.WalkSpeed .. ")")
+            player:Kick("Speed exploit detected.")
+        end
+    end)
 end
 
-local ScriptReport = game.ReplicatedStorage.SReports.Report
-local UseWebhook = false -- change to true if you want to use webhooks
-local webhookURL = "" -- if you are using webhooks
-local HttpService = game:GetService("HttpService")
+-- Monitor new players
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        task.wait(1) -- wait for character to fully load
+        monitorPlayer(player)
+    end)
+end)
 
-
-ScriptReport.OnServerEvent:Connect(function(plr, ItemName, ItemClassName)
-	
-	warn(plr.Name.. " Submited report about ITEM NAME: ".. ItemName.. " ITEM TYPE: ".. ItemClassName) -- state report
-	
-	if ItemClassName == "Script" or("ModuleScript") then -- if item is able to execute code
-		
-		if UseWebhook == true then -- send details to webhook if active
-			
-			local data = {
-				content = "script name: ".. ItemName.. " script type: ".. ItemClassName
-			}
-			
-			local success, response = pcall(function() -- send the data to the webhook in a Pcall
-				return HttpService:PostAsync(
-					webhookURL,
-					HttpService:JSONEncode(data),
-					Enum.HttpContentType.ApplicationJson
-				)
-			end)
-			
-			if success then
-				print("Webhook sent successfully.")
-			else
-				warn("Failed to send webhook: " .. tostring(response))
-			end
-			
-		end
-		
-		
-	else -- if reported for no reason
-		warn("ITEM NAME: ".. ItemName.. " ITEM TYPE: ".. ItemClassName.. " WAS REPORTED! AND NOT ACTIONED.")
-	end
+-- Clean up on player removal
+Players.PlayerRemoving:Connect(function(player)
+    playerData[player] = nil
 end)
