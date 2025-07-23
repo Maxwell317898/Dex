@@ -8,15 +8,11 @@ This script should be used in coordination with other DeX solutions.
 While this system is very good at stoping common exploits, it may not pick up on all exploits.
 ]]
 
--- Place this in ServerScriptService
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 
 -- List of usernames or UserIds who are exempt from detection
 local exemptUsers = {
-    ["Player1"] = true,
-    ["Player2"] = true,
     [123456789] = true  -- UserId can also be used
 }
 
