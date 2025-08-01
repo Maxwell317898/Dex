@@ -189,7 +189,7 @@
     currentX += (mouseX - currentX) * lerp;
     currentY += (mouseY - currentY) * lerp;
 
-    crosshair.style.transform = `translate(${currentX}px, ${currentY}px)`;
+    crosshair.style.transform = `translate(${currentX-15}px, ${currentY-13}px)`;
     requestAnimationFrame(animate);
   }
 
