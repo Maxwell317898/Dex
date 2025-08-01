@@ -1,4 +1,4 @@
-# DeX
+# [DeX](https://maxwell317898.github.io/Dex/)
 >[!CAUTION]
 >DeX Will need to be retested to confirm that version 2 works. </br>
 >legacy version 1 is still available but will no longer recive support.
