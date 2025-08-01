@@ -7,6 +7,10 @@ Deactivating eXploiters </br>
 Server side anti-cheat
 
 > This Branch is on version 2 to see latest versions check out other `branches` </br>
+## Getting started
+1. Press the ServerScriptService Folder above
+2. copy the code inside of DeX-Move
+3. In Roblox Studio paste the code into a regular script inside of ServerScriptService (green cloud)
 ## How does it work?
 
 It works by checking if a player is moving at the right speed and traveling the right distance if they teleport it will notice thay have moved to fast and kick them.
