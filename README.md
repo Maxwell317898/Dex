@@ -1,26 +1,11 @@
 # DeX
->[!CAUTION]
->DeX Will need to be retested to confirm that version 2 works. </br>
->legacy version 1 is still available but will no longer recive support.
-
 Deactivating eXploiters </br>
 Server side anti-cheat
 
-> This Branch is on version 2 to see latest versions check out other `branches` </br>
-## Getting started
-1. Press the ServerScriptService Folder above
-2. copy the code inside of DeX-Move
-3. In Roblox Studio paste the code into a regular script inside of ServerScriptService (green cloud)
-## How does it work?
+> This Branch is on version 1 (GithubPages) to see latest versions check out other `branches` </br>
 
-It works by checking if a player is moving at the right speed and traveling the right distance if they teleport it will notice thay have moved to fast and kick them.
+# NEW WEBSITE AT https://maxwell317898.github.io/Pages/
 
-> [!IMPORTANT]
-> DeX has not been tested as of yet by any exploit methods. Once tested, results will be posted.
-
-## What I am working on.
-Client side detection (that works this time) </br>
-ban procedure (to ban exploiters) `this one may take some time, as Client side detection is being worked on`
 
 ------------------------------------------------------------------------------------------------------------
 > [!CAUTION]
