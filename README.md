@@ -1,19 +1,27 @@
 # DeX
 >[!CAUTION]
->DeX has been tested and should NOT BE USED currently, as most exploits are not acted upon. </br>
->I am Working on a patch, expect this to be made by the 25th.
+>DeX Will need to be retested to confirm that version 2 works. </br>
+>legacy version 1 is still available but will no longer recive support.
 
-Deactivating eXploiters </br> </br>
-Server side & Client side anti script execution
-> [!NOTE]
-> This Branch is on version 1 to see latest versions check out other `branches` </br>
+Deactivating eXploiters </br>
+Server side anti-cheat
+
+> This Branch is on version 2 to see latest versions check out other `branches` </br>
+## Getting started
+1. Press the ServerScriptService Folder above
+2. copy the code inside of DeX-Move
+3. In Roblox Studio paste the code into a regular script inside of ServerScriptService (green cloud)
 ## How does it work?
-it works by looking out for if an item is added to the `localplayer` by using `item.ChildAdded` event, then DeX checks the type of the item (most exectutors inject `LocalScripts`) with `item.ClassName`, DeX disables the script from running useing `item.disabled = true`.
+
+It works by checking if a player is moving at the right speed and traveling the right distance if they teleport it will notice thay have moved to fast and kick them.
+
 > [!IMPORTANT]
 > DeX has not been tested as of yet by any exploit methods. Once tested, results will be posted.
-## What I am working on.
-adding a feature to veiw flagged items </br>
-adding a feature to check that the localplayer script is still operational (and not disabled by an exploit)
 
+## What I am working on.
+Client side detection (that works this time) </br>
+ban procedure (to ban exploiters) `this one may take some time, as Client side detection is being worked on`
+
+------------------------------------------------------------------------------------------------------------
 > [!CAUTION]
 > This measure of protection against exploitation comes with no warrenty, or 100% certenty of removing exploiters
