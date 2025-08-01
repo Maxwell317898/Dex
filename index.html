@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeX Anti-Cheat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    #crosshair {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  border: 2px solid #00c3ff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #00c3ff88;
+  transition: background 0.2s ease;
+}
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #07142f 0%, #030914 100%);
+      color: #f5f5f7;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #4dc3ff;
+      background: linear-gradient(90deg, #00c3ff, #3a75ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #c1c7d0;
+    }
+
+    .highlight {
+      margin-top: 1.2rem;
+      display: inline-block;
+      padding: 0.6rem 1.2rem;
+      background: linear-gradient(90deg, #00c3ff, #3a75ff);
+      color: white;
+      font-weight: 600;
+      border-radius: 10px;
+      animation: pulse 2s infinite ease-in-out;
+      backdrop-filter: blur(10px);
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .cta-buttons a {
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid #3c3f47;
+      color: #c9d1d9;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .cta-buttons a:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    main {
+      width: 100%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+    }
+
+    section {
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f0f0f0;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #a1a7b3;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #7a8494;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">DeX Anti-Cheat</div>
+    <p>Deactivating eXploiters with Precision and Power</p>
+    <div class="highlight">Server-Side Protection • Always Evolving</div>
+    <div class="cta-buttons">
+      <a href="https://github.com/Maxwell317898/Dex?tab=readme-ov-file#getting-started">Get Started</a>
+      <a href="https://github.com/Maxwell317898/Dex?tab=readme-ov-file#how-does-it-work">Learn More</a>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>Roblox's Most Advanced Anti-Cheat</h2>
+      <p>DeX is a modern, proactive anti-cheat solution built specifically for Roblox developers who are serious about fair gameplay. With a sleek design and powerful detection logic, DeX ensures that exploiters are stopped before they disrupt your experience.</p>
+    </section>
+
+    <section>
+      <h2>Server-Side Movement Checks</h2>
+      <p>Client-side anti-cheat can be bypassed. That’s why DeX uses robust server-side movement validation to detect speed, teleportation, noclip, and other suspicious behavior — all without relying on the client’s integrity.</p>
+    </section>
+
+    <section>
+      <h2>Continuous Innovation</h2>
+      <p>The landscape of Roblox exploits is always changing, and so are we. DeX is updated regularly with smarter checks, more efficient logging, and better compatibility with your existing game code. We evolve — so exploiters get left behind.</p>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 DeX Anti-Cheat — Built for fair play on Roblox
+  </footer>
+  <div id="crosshair"></div>
+<script>
+  const crosshair = document.getElementById("crosshair");
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let currentX = mouseX;
+  let currentY = mouseY;
+
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animate() {
+    const lerp = 0.1; // dampening factor
+    currentX += (mouseX - currentX) * lerp;
+    currentY += (mouseY - currentY) * lerp;
+
+    crosshair.style.transform = `translate(${currentX-15}px, ${currentY-13}px)`;
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
