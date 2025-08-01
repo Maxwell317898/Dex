@@ -4,7 +4,7 @@ Server side anti-cheat
 
 > This Branch is on version 1 (GithubPages) to see latest versions check out other `branches` </br>
 
-# NEW WEBSITE AT https://maxwell317898.github.io/Pages/
+# [NEW WEBSITE](https://maxwell317898.github.io/Dex/)
 
 
 ------------------------------------------------------------------------------------------------------------
