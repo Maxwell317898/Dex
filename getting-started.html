@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeX - Getting Started</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 30%, #0f1419 70%, #000510 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: none;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(30, 58, 138, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.15) 0%, transparent 50%);
+            z-index: -1;
+            animation: gradientShift 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes gradientShift {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
+            position: relative;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .back-link:hover {
+            color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 50px 0;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.4)); }
+            100% { filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.6)); }
+        }
+
+        .version-notice {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .version-notice h3 {
+            color: #fbbf24;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .version-notice p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .installation-steps {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .installation-steps h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #3b82f6;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            color: #3b82f6;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-right: 20px;
+            flex-shrink: 0;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+            animation: numberGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes numberGlow {
+            0% { text-shadow: 0 0 10px rgba(59, 130, 246, 0.6); }
+            100% { text-shadow: 0 0 20px rgba(96, 165, 250, 0.8); }
+        }
+
+        .step-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .step-content p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: #93c5fd;
+            font-size: 0.9rem;
+        }
+
+        .info-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .info-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #3b82f6;
+        }
+
+        .info-section p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .warning-notice {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .warning-notice h3 {
+            color: #f87171;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .warning-notice p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .github-link {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .github-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5);
+        }
+
+        .development-status {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .development-status h3 {
+            color: #60a5fa;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .development-status ul {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-left: 20px;
+        }
+
+        /* Gaming Crosshair */
+        .crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.1s ease-out;
+        }
+
+        .crosshair::before,
+        .crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+        }
+
+        .crosshair::before {
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+        }
+
+        .crosshair::after {
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 2px;
+            transform: translate(-50%, -50%);
+        }
+
+        .crosshair-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: rgba(59, 130, 246, 1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.8);
+        }
+
+        a, button {
+            cursor: pointer !important;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step-number {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="crosshair" id="crosshair">
+        <div class="crosshair-dot"></div>
+    </div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">DeX</div>
+                <a href="index.html" class="back-link">← Back to Main</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="page-title">Getting Started</h1>
+
+            <div class="version-notice">
+                <h3>⚠️ Version Notice</h3>
+                <p>DeX Version 2 is currently being retested to confirm full functionality. Legacy Version 1 remains available but will no longer receive support. This guide covers Version 2 installation.</p>
+            </div>
+
+            <div class="installation-steps">
+                <h2>📦 Installation Steps</h2>
+                
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Navigate to Repository</h3>
+                        <p>Go to the DeX GitHub repository and open the ServerScriptService folder to access the source code.</p>
+                        <a href="https://github.com/Maxwell317898/Dex/tree/main/ServerScriptService" target="_blank" class="github-link">View ServerScriptService →</a>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Copy DeX-Move Code</h3>
+                        <p>Copy all the code inside the DeX-Move file. This contains the core server-side movement validation logic.</p>
+                        <div class="code-block">-- DeX-Move contains the main anticheat logic<br/>-- Copy the entire script contents</div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Create Script in Roblox Studio</h3>
+                        <p>Open Roblox Studio, navigate to ServerScriptService (the green cloud icon), and create a new regular Script. Paste the copied DeX-Move code into this script.</p>
+                        <div class="code-block">ServerScriptService → Insert Object → Script<br/>Paste DeX-Move code and save</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>🔧 How DeX Works</h2>
+                <p>DeX operates by continuously monitoring player movement patterns on the server side. It validates that players are moving at appropriate speeds and traveling realistic distances. When the system detects impossible movement patterns—such as teleportation or speed hacking—it automatically kicks the offending player to maintain game integrity.</p>
+            </div>
+
+            <div class="development-status">
+                <h3>🚧 Current Development</h3>
+                <ul>
+                    <li><strong>Client-side Detection:</strong> Enhanced detection methods currently in development</li>
+                    <li><strong>Ban System:</strong> Permanent ban procedures for repeat offenders (in progress)</li>
+                    <li><strong>Advanced Analytics:</strong> Detailed logging and reporting features</li>
+                </ul>
+            </div>
+
+            <div class="warning-notice">
+                <h3>⚠️ Important Disclaimer</h3>
+                <p>DeX has not yet been fully tested against all known exploit methods. Test results will be published once comprehensive testing is complete. This protection system comes with no warranty or 100% certainty of eliminating all exploiters. Always use multiple layers of security in production games.</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px;">
+                <a href="https://github.com/Maxwell317898/Dex" target="_blank" class="github-link">View Full Repository →</a>
+                <a href="https://github.com/Maxwell317898/Dex/issues" target="_blank" class="github-link" style="margin-left: 20px;">Report Issues →</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Gaming crosshair that follows mouse with dampening
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let crosshairX = mouseX;
+        let crosshairY = mouseY;
+
+        function updateCrosshair() {
+            const damping = 0.1;
+            crosshairX += (mouseX - crosshairX) * damping;
+            crosshairY += (mouseY - crosshairY) * damping;
+            
+            const crosshair = document.getElementById('crosshair');
+            crosshair.style.left = crosshairX + 'px';
+            crosshair.style.top = crosshairY + 'px';
+            
+            requestAnimationFrame(updateCrosshair);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Start crosshair animation
+        updateCrosshair();
+    </script>
+</body>
+</html>
