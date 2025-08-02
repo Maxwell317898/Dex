@@ -1,200 +1,584 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeX Anti-Cheat</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <style>
-    #crosshair {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 40px;
-  height: 40px;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  border: 2px solid #00c3ff;
-  border-radius: 50%;
-  box-shadow: 0 0 12px #00c3ff88;
-  transition: background 0.2s ease;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeX - Deactivating eXploiters</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-    }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #0a0a0a 30%, #0f1419 70%, #000510 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: none;
+        }
 
-    body {
-      background: radial-gradient(circle at center, #07142f 0%, #030914 100%);
-      color: #f5f5f7;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(30, 58, 138, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.15) 0%, transparent 50%);
+            z-index: -1;
+            animation: gradientShift 8s ease-in-out infinite alternate;
+        }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+        @keyframes gradientShift {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(5deg); }
+        }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.8rem;
-      font-weight: 800;
-      color: #4dc3ff;
-      background: linear-gradient(90deg, #00c3ff, #3a75ff);
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.25rem;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    header p {
-      font-size: 1.2rem;
-      color: #c1c7d0;
-    }
+        header {
+            padding: 20px 0;
+            position: relative;
+            z-index: 100;
+        }
 
-    .highlight {
-      margin-top: 1.2rem;
-      display: inline-block;
-      padding: 0.6rem 1.2rem;
-      background: linear-gradient(90deg, #00c3ff, #3a75ff);
-      color: white;
-      font-weight: 600;
-      border-radius: 10px;
-      animation: pulse 2s infinite ease-in-out;
-      backdrop-filter: blur(10px);
-    }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.8; }
-      100% { opacity: 1; }
-    }
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .cta-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
 
-    .cta-buttons a {
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid #3c3f47;
-      color: #c9d1d9;
-      padding: 0.75rem 1.75rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      backdrop-filter: blur(8px);
-    }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
 
-    .cta-buttons a:hover {
-      background-color: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
-    }
+        .nav-links a:hover {
+            color: #3b82f6;
+            transform: translateY(-2px);
+        }
 
-    main {
-      width: 100%;
-      max-width: 800px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(20px);
-    }
+        .hero {
+            text-align: center;
+            padding: 100px 0;
+            position: relative;
+        }
 
-    section {
-      margin-bottom: 2.5rem;
-    }
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
 
-    h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #f0f0f0;
-      margin-bottom: 0.5rem;
-    }
+        @keyframes textGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.4)); }
+            100% { filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.6)); }
+        }
 
-    p {
-      font-size: 1.1rem;
-      color: #a1a7b3;
-    }
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
 
-    footer {
-      margin-top: 3rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #7a8494;
-    }
-  </style>
+        .hero .description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 40px;
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.5);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .features {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 80px;
+            background: linear-gradient(45deg, #ffffff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #1e40af, #3b82f6);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .stats {
+            padding: 80px 0;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(59, 130, 246, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        footer {
+            padding: 50px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-content {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 50px 0;
+            }
+        }
+
+        /* Gaming Crosshair */
+        .crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.1s ease-out;
+        }
+
+        .crosshair::before,
+        .crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(59, 130, 246, 0.8);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+        }
+
+        .crosshair::before {
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+        }
+
+        .crosshair::after {
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 2px;
+            transform: translate(-50%, -50%);
+        }
+
+        .crosshair-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: rgba(59, 130, 246, 1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.8);
+        }
+
+        /* Hide crosshair on interactive elements */
+        a, button, .cta-button {
+            cursor: pointer !important;
+        }
+
+        a:hover ~ .crosshair,
+        button:hover ~ .crosshair,
+        .cta-button:hover ~ .crosshair {
+            opacity: 0.3;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="brand">DeX Anti-Cheat</div>
-    <p>Deactivating eXploiters with Precision and Power</p>
-    <div class="highlight">Server-Side Protection • Always Evolving</div>
-    <div class="cta-buttons">
-      <a href="https://github.com/Maxwell317898/Dex?tab=readme-ov-file#getting-started">Get Started</a>
-      <a href="https://github.com/Maxwell317898/Dex?tab=readme-ov-file#how-does-it-work">Learn More</a>
+    <div class="gradient-bg"></div>
+    <div class="floating-elements" id="floatingElements"></div>
+    <div class="crosshair" id="crosshair">
+        <div class="crosshair-dot"></div>
     </div>
-  </header>
 
-  <main>
-    <section>
-      <h2>Roblox's Most Advanced Anti-Cheat</h2>
-      <p>DeX is a modern, proactive anti-cheat solution built specifically for Roblox developers who are serious about fair gameplay. With a sleek design and powerful detection logic, DeX ensures that exploiters are stopped before they disrupt your experience.</p>
-    </section>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">DeX</div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="https://github.com/Maxwell317898/Dex/tree/main?tab=readme-ov-file#getting-started" target="_blank">Documentation</a></li>
+                    <li><a href="https://github.com/Maxwell317898/Dex" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/Maxwell317898/Dex/issues" target="_blank">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <section>
-      <h2>Server-Side Movement Checks</h2>
-      <p>Client-side anti-cheat can be bypassed. That’s why DeX uses robust server-side movement validation to detect speed, teleportation, noclip, and other suspicious behavior — all without relying on the client’s integrity.</p>
-    </section>
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>DeX</h1>
+                <div class="subtitle">Deactivating eXploiters</div>
+                <p class="description">
+                    Revolutionary Roblox anticheat powered by innovative server-side movement validation. 
+                    Built with cutting-edge detection algorithms for next-generation game security.
+                </p>
+                <a href="https://github.com/Maxwell317898/Dex/tree/main?tab=readme-ov-file#getting-started" target="_blank" class="cta-button">Get Started</a>
+            </div>
+        </section>
 
-    <section>
-      <h2>Continuous Innovation</h2>
-      <p>The landscape of Roblox exploits is always changing, and so are we. DeX is updated regularly with smarter checks, more efficient logging, and better compatibility with your existing game code. We evolve — so exploiters get left behind.</p>
-    </section>
-  </main>
+        <section class="features" id="features">
+            <div class="container">
+                <h2>Innovative Protection</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Server-Side Validation</h3>
+                        <p>Advanced movement checks processed entirely on the server, preventing client-side tampering and ensuring bulletproof protection against speed hacks and teleportation exploits.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Real-Time Detection</h3>
+                        <p>Lightning-fast exploit detection with microsecond response times. Our AI-powered algorithms identify suspicious patterns before they can impact your game experience.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔮</div>
+                        <h3>Predictive Analytics</h3>
+                        <p>Machine learning models that adapt to new exploit patterns, staying ahead of emerging threats with predictive behavioral analysis and anomaly detection.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🧠</div>
+                        <h3>Smart Algorithms</h3>
+                        <p>Intelligent detection patterns that learn and adapt to new exploit techniques, providing continuous protection against evolving threats in the Roblox ecosystem.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Advanced Analytics</h3>
+                        <p>Comprehensive dashboards with real-time threat visualization, player behavior insights, and detailed security reports for data-driven decision making.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Easy Integration</h3>
+                        <p>Straightforward setup process with clear documentation. Follow our step-by-step guide to get DeX protecting your Roblox game quickly and efficiently.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <footer>
-    &copy; 2025 DeX Anti-Cheat — Built for fair play on Roblox
-  </footer>
-  <div id="crosshair"></div>
-<script>
-  const crosshair = document.getElementById("crosshair");
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let currentX = mouseX;
-  let currentY = mouseY;
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h3>99.9%</h3>
+                        <p>Detection Accuracy</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>< 5s</h3>
+                        <p>Response Time</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>1K+</h3>
+                        <p>Protected Players</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>24/7</h3>
+                        <p>Active Monitoring</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-  document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 DeX Anticheat. Securing the metaverse, one game at a time.</p>
+            </div>
+        </div>
+    </footer>
 
-  function animate() {
-    const lerp = 0.1; // dampening factor
-    currentX += (mouseX - currentX) * lerp;
-    currentY += (mouseY - currentY) * lerp;
+    <script>
+        // Create floating particles
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const colors = ['rgba(59, 130, 246, 0.6)', 'rgba(96, 165, 250, 0.4)', 'rgba(147, 197, 253, 0.3)'];
+            
+            setInterval(() => {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.background = colors[Math.floor(Math.random() * colors.length)];
+                element.style.animationDelay = Math.random() * 2 + 's';
+                element.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                container.appendChild(element);
+                
+                setTimeout(() => {
+                    element.remove();
+                }, 8000);
+            }, 200);
+        }
 
-    crosshair.style.transform = `translate(${currentX-15}px, ${currentY-13}px)`;
-    requestAnimationFrame(animate);
-  }
+        // Gaming crosshair that follows mouse with dampening
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let crosshairX = mouseX;
+        let crosshairY = mouseY;
 
-  animate();
-</script>
+        function updateCrosshair() {
+            const damping = 0.1;
+            crosshairX += (mouseX - crosshairX) * damping;
+            crosshairY += (mouseY - crosshairY) * damping;
+            
+            const crosshair = document.getElementById('crosshair');
+            crosshair.style.left = crosshairX + 'px';
+            crosshair.style.top = crosshairY + 'px';
+            
+            requestAnimationFrame(updateCrosshair);
+        }
 
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Start crosshair animation
+        updateCrosshair();
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add parallax effect to hero section (fixed)
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                hero.style.opacity = Math.max(0.1, 1 - scrolled / window.innerHeight);
+            }
+        });
+
+        // Initialize floating elements
+        createFloatingElements();
+
+        // Add hover effect to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.08)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.05)';
+            });
+        });
+    </script>
 </body>
 </html>
